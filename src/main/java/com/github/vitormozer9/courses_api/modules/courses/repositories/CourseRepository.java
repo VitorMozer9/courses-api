@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.github.vitormozer9.courses_api.modules.courses.entities.CourseEntity;
 
-public interface CourseRepository extends JpaRepository<UUID, CourseEntity>{
+public interface CourseRepository extends JpaRepository<CourseEntity, UUID>{
     Optional<CourseEntity> findByName(String name);
 }
