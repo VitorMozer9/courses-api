@@ -18,10 +18,9 @@ public class CreateCourseUseCase {
         .findByName(courseEntity.getName())
         .ifPresent((course) -> {
             //throw CourseFoundException
-            System.out.println("Course alredy exists!");
-            return;
+            throw new RuntimeException("Course already exists!");
         });
 
         return this.courseRepository.save(courseEntity);
-    }
+    } 
 }
