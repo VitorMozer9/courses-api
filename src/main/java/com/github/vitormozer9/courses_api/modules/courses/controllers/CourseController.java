@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.github.vitormozer9.courses_api.modules.courses.entities.CourseEntity;
 import com.github.vitormozer9.courses_api.modules.courses.useCases.CreateCourseUseCase;
+import com.github.vitormozer9.courses_api.modules.courses.useCases.DeleteCourseUseCase;
 import com.github.vitormozer9.courses_api.modules.courses.useCases.ListCoursesUseCase;
 import com.github.vitormozer9.courses_api.modules.courses.useCases.SearchCourseUseCase;
 
@@ -29,6 +31,9 @@ public class CourseController {
 
     @Autowired
     ListCoursesUseCase listCoursesUseCase;
+
+    @Autowired
+    DeleteCourseUseCase deleteCourseUseCase;
 
     @PostMapping("/")
     public ResponseEntity<Object> create(@RequestBody CourseEntity courseEntity) {
@@ -59,6 +64,17 @@ public class CourseController {
         try {
             var result = this.searchCourseUseCase.searchById(id);
             return ResponseEntity.ok().body(result);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deletById(@PathVariable UUID id){
+        try {
+            this.deleteCourseUseCase.delete(id);
+            return ResponseEntity.noContent().build();
+
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
