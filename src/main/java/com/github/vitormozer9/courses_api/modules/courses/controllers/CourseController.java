@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -20,6 +21,7 @@ import com.github.vitormozer9.courses_api.modules.courses.useCases.CreateCourseU
 import com.github.vitormozer9.courses_api.modules.courses.useCases.DeleteCourseUseCase;
 import com.github.vitormozer9.courses_api.modules.courses.useCases.ListCoursesUseCase;
 import com.github.vitormozer9.courses_api.modules.courses.useCases.SearchCourseUseCase;
+import com.github.vitormozer9.courses_api.modules.courses.useCases.ToggleCourseActiveUseCase;
 import com.github.vitormozer9.courses_api.modules.courses.useCases.UpdateCourseUseCase;
 
 @RestController
@@ -40,6 +42,9 @@ public class CourseController {
 
     @Autowired
     UpdateCourseUseCase updateCourseUseCase;
+
+    @Autowired
+    ToggleCourseActiveUseCase toggleCourseActiveUseCase;
 
     @PostMapping("/")
     public ResponseEntity<Object> create(@RequestBody CourseEntity courseEntity) {
@@ -92,6 +97,17 @@ public class CourseController {
             this.deleteCourseUseCase.delete(id);
             return ResponseEntity.noContent().build();
 
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PatchMapping("/{id}/active")
+    public ResponseEntity<Object> toggleActive(@PathVariable UUID id) {
+        try {
+            var result = this.toggleCourseActiveUseCase.execute(id);
+            return ResponseEntity.ok().body(result);
+            
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
